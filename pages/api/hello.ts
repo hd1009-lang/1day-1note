@@ -1,13 +1,34 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-
+import {Client} from '@notionhq/client'
 type Data = {
-  name: string
+  data:{}
+}
+type Body={
+  blockID:string
 }
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  const notion = new Client({ auth: process.env.NOTION_API_KEY });
+  const {method,body} = req
+  switch (method) {
+    case 'PATCH':
+      const {blockID} = JSON.parse(body)
+      const response = await notion.pages.update({
+        page_id:blockID,
+        properties: {
+          ["TM%60S"]: { number: 2 },
+        },
+      })
+      console.log(response);
+      
+      return res.status(200).json({data: response })
+      
+    default:
+      break;
+  }
+ 
 }
