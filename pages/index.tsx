@@ -1,5 +1,6 @@
 import { Client } from '@notionhq/client';
 import React, { useEffect, useState } from 'react';
+import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next';
 import { getFile } from '../lib/post';
 export default function Home({ result }: ArrayResult) {
   const [content, setContent] = useState<string>('');
@@ -45,7 +46,19 @@ interface ArrayResult {
   result: Result;
 }
 
-export async function getStaticProps() {
+// export async function getStaticProps() {
+//   const notion = new Client({ auth: process.env.NOTION_API_KEY });
+//   const databaseId = process.env.NOTION_DATABASE_ID;
+//   const { results } = await notion.databases.query({ database_id: databaseId as string });
+//   const random = Math.floor(Math.random() * results.length);
+//   const result = results[random];
+//   return {
+//     props: {
+//       result,
+//     },
+//   };
+// }
+export async function getServerSideProps(context: GetServerSideProps) {
   const notion = new Client({ auth: process.env.NOTION_API_KEY });
   const databaseId = process.env.NOTION_DATABASE_ID;
   const { results } = await notion.databases.query({ database_id: databaseId as string });
@@ -55,6 +68,5 @@ export async function getStaticProps() {
     props: {
       result,
     },
-    revalidate: 10,
   };
 }
