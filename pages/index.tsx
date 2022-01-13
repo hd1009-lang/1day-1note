@@ -46,19 +46,7 @@ interface ArrayResult {
   result: Result;
 }
 
-// export async function getStaticProps() {
-//   const notion = new Client({ auth: process.env.NOTION_API_KEY });
-//   const databaseId = process.env.NOTION_DATABASE_ID;
-//   const { results } = await notion.databases.query({ database_id: databaseId as string });
-//   const random = Math.floor(Math.random() * results.length);
-//   const result = results[random];
-//   return {
-//     props: {
-//       result,
-//     },
-//   };
-// }
-export async function getServerSideProps(context: GetServerSideProps) {
+export async function getStaticProps() {
   const notion = new Client({ auth: process.env.NOTION_API_KEY });
   const databaseId = process.env.NOTION_DATABASE_ID;
   const { results } = await notion.databases.query({ database_id: databaseId as string });
@@ -70,3 +58,15 @@ export async function getServerSideProps(context: GetServerSideProps) {
     },
   };
 }
+// export async function getServerSideProps(context: GetServerSideProps) {
+//   const notion = new Client({ auth: process.env.NOTION_API_KEY });
+//   const databaseId = process.env.NOTION_DATABASE_ID;
+//   const { results } = await notion.databases.query({ database_id: databaseId as string });
+//   const random = Math.floor(Math.random() * results.length);
+//   const result = results[random];
+//   return {
+//     props: {
+//       result,
+//     },
+//   };
+// }
