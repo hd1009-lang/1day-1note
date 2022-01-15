@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next';
 import { motion } from 'framer-motion';
 import { getFile } from '../lib/post';
 import Router from 'next/router';
+import Head from 'next/head';
 export default function Home({ result }: ArrayResult) {
   const [content, setContent] = useState<string>('');
   const [showContent, setShowContent] = useState<boolean>(false);
@@ -29,6 +30,9 @@ export default function Home({ result }: ArrayResult) {
   };
   return (
     <div className='w-full h-screen flex items-center justify-center overflow-hidden'>
+      <Head>
+        <title>1 day - 1 note</title>
+      </Head>
       <div className='w-[95%] h-[500px] text-[14px] overflow-hidden relative '>
         <motion.h4
           initial={{ opacity: 0 }}
