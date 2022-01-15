@@ -3,24 +3,26 @@ import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { motion } from 'framer-motion';
 import { getFile } from '../lib/post';
+import Router from 'next/router';
 export default function Home({ result }: ArrayResult) {
   const [content, setContent] = useState<string>('');
   const [showContent, setShowContent] = useState<boolean>(false);
+  const [note, setNote] = useState<Result>(result);
+
   useEffect(() => {
     const getCheck = async () => {
       const check = await getFile(result.properties.Description.files[0].file.url);
-      console.log(check);
       setContent(check.content);
     };
     getCheck();
   }, []);
-  const [note, setNote] = useState<Result>(result);
-  const handleUpdate = async (blockID: string) => {
-    const { data } = await fetch('/api/hello', {
+  const handleUpdate = async (blockID: string, mount: number) => {
+    const { data } = await fetch('/api/notion', {
       method: 'PATCH',
-      body: JSON.stringify({ blockID }),
+      body: JSON.stringify({ blockID, mount }),
     }).then((data) => data.json());
     setNote(data);
+    Router.push('/success');
   };
   const handleShowContent = () => {
     setShowContent(!showContent);
@@ -60,7 +62,10 @@ export default function Home({ result }: ArrayResult) {
             className='max-h-[90%] h-fit w-full overflow-scroll p-[10px] bg-white box__content rounded-[10px]'
             dangerouslySetInnerHTML={{ __html: content }}
           ></motion.div>
-          <motion.button className=' mt-2 h-[10%] flex-shrink-0 w-[200px] bg-red-100 m-auto border-2 border-current rounded-[10px]'>
+          <motion.button
+            className='mt-2 h-[10%] flex-shrink-0 w-[200px] bg-red-100 m-auto border-2 border-current rounded-[10px]'
+            onClick={() => handleUpdate(note.id, note.properties.Mount.number)}
+          >
             Xác nhận
           </motion.button>
         </motion.div>

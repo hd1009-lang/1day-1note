@@ -16,17 +16,14 @@ export default async function handler(
   const {method,body} = req
   switch (method) {
     case 'PATCH':
-      const {blockID} = JSON.parse(body)
+      const {blockID,mount} = JSON.parse(body)
       const response = await notion.pages.update({
         page_id:blockID,
         properties: {
-          ["TM%60S"]: { number: 2 },
+          ["TM%60S"]: { number: mount+1 },
         },
       })
-      console.log(response);
-      
       return res.status(200).json({data: response })
-      
     default:
       break;
   }
